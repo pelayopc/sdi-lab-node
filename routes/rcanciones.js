@@ -48,7 +48,27 @@ module.exports = function(app, swig, gestorBD) {
             if (id == null) {    
                 res.send("Error al insertar canción");   
             } else {    
-                res.send("Agregada la canción ID:  " + id);   
+                //res.send("Agregada la canción ID:  " + id);   
+                if (req.files.portada != null) {    
+                    var imagen = req.files.portada;    
+                    imagen.mv('public/portadas/' + id + '.png', function(err) {     
+                        if (err) {      
+                            res.send("Error al subir la portada");     
+                        } else {      
+                            //res.send("Agregada id:  " + id);     
+                            if (req.files.audio != null) {                 
+                                var audio = req.files.audio;                 
+                                audio.mv('public/audios/'+id+'.mp3', function(err) {                      
+                                    if (err) {                         
+                                        res.send("Error al subir el audio");                      
+                                    } else {                         
+                                        res.send("Agregada id:  "+ id);                      
+                                    }                  
+                                });              
+                            }
+                        }    
+                    });   
+                } 
             }  
         });
     }); 
