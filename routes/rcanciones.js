@@ -29,7 +29,8 @@ module.exports = function(app, swig, gestorBD) {
         res.send(String(respuesta)); 
     });  
     app.get('/canciones/:id', function(req, res) {
-        var respuesta = 'id: ' + req.params.id;  res.send(respuesta); 
+        var respuesta = 'id: ' + req.params.id;  
+        res.send(respuesta); 
     }); 
  
     app.get('/canciones/:genero/:id', function(req, res) {  
@@ -72,5 +73,37 @@ module.exports = function(app, swig, gestorBD) {
             }  
         });
     }); 
+    app.get('/cancion/:id', function (req, res) {  
+        var criterio = { "_id" : gestorBD.mongo.ObjectID(req.params.id)  };    
+        gestorBD.obtenerCanciones(criterio,function(canciones){   
+            if ( canciones == null ){    
+                res.send(respuesta);   
+            } else {    
+                var respuesta = swig.renderFile('views/bcancion.html',     
+                {     
+                    cancion : canciones[0]    
+                });    
+                res.send(respuesta);   
+            }  
+        }); 
+    })
+    app.get("/tienda", function(req, res) {  
+        var criterio = {}; 
+        if( req.query.busqueda != null ){   
+            criterio = { "nombre" : {$regex : ".*"+req.query.busqueda+".*", $options: '-i'}  };  
+        } 
+ 
+        gestorBD.obtenerCanciones( criterio,function(canciones) {   
+            if (canciones == null) {    
+                res.send("Error al listar ");   
+            } else {    
+                var respuesta = swig.renderFile('views/btienda.html',     
+                {     
+                    canciones : canciones    
+                });    
+                res.send(respuesta);   
+            }  
+        }); 
+    });
  
 };
