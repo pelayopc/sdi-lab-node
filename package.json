@@ -6,7 +6,7 @@
         "body-parser": "^1.19.0",
         "express": "^4.17.0",
         "express-fileupload": "^1.1.4",
-        "mongodb": "^2.2.33",
+        "mongodb": "^3.1.13",
         "swig": "^1.4.2"
     }
 }
